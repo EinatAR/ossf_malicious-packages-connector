@@ -1,14 +1,37 @@
-# Test_malicious-packages-ossf
+# OSSF Malicious Packages Connector
 # Objective
 
-The connector will ingest malicious package JSONs from the repo, create hash-based STIX Indicators and related File Observables in OpenCTI.  
+The connector ingests malicious package JSONs from the repo, creates File Observables, hash-based STIX Indicators, and Based-on Relationships in OpenCTI.  
 
 **Connector type:** External Import connector  
 **Source:** GitHub repo `ossf/malicious-packages`  
-**Target:** OpenCTI, then Sentinel via Sentinel stream connector  
-**Schedule:** Daily  
+**Target:** OpenCTI, then optional, export Indicators to your SIEM solution and create a blocking list accordingly.
+**Schedule:** Hourly  
 
 # Scope
 
-- Ingest malicious package JSONs from the repo, create hash-based STIX Indicators and related Observables/Reports in OpenCTI  
-- Map all relevant fields into OpenCTI entities (hash-based Indicators and related File Observables)
+- Ingests malicious package JSONs from the repo, creates File Observables, hash-based STIX Indicators, and Based-on Relationships in OpenCTI
+- Maps the following fields into OpenCTI entities (hash-based Indicators and related File Observables)
+
+- # Data Mapping
+
+| **OSV fields** | **OpenCTI fields** |
+| --- | --- |
+| Package name | Indicator name |
+| Summary | Description (Observable and Indicator) |
+| Score | Default (50) |
+| Hash | Name for Observable, Indicator pattern for Indicator |
+| URL | External Reference (within the Indicator) |
+|  | TLP:GREEN |
+| Main Observable Type | - |
+|  |  |
+|  |  |
+
+# **Additional Notes**
+
+- Platform creation date = Valid from
+- (Realizing sometimes there’s more than 1 hash in a package, so changing to create 1 Observable + 1 Indicator (based on the Observable) **for each hash**) -> To test
+- The connector targets only sha256 in this version
+- The external reference is included in the Indicator object
+- Connector runs every 1 hour
+- The connector ingests in “chuncks” of 5000 (essential for first run where it targets over 220K packages)
