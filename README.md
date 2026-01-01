@@ -37,6 +37,6 @@ The connector ingests malicious package JSONs from the repo, creates File Observ
 
 # **Future Developments**  
   
-- Realizing sometimes there’s more than 1 hash in a package, modification to support Indicator based on multiple Observables -> **To develop and test**
+- When there’s more than 1 hash in a package, modification to support Indicator based on multiple Observables -> **To develop and test**
 - Add Main Observable Type (File)
 - Support SHA1/MD5 if present
