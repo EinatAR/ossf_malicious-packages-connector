@@ -9,7 +9,7 @@ from typing import Dict, Any, List, Optional
 import yaml
 import requests
 import stix2
-from pycti import OpenCTIConnectorHelper, get_config_variable, OpenCTIApiClient
+from pycti import OpenCTIConnectorHelper, get_config_variable, OpenCTIApiClient, Indicator, 
 
 # TLP:CLEAR marking definition (STIX ID)
 TLP_CLEAR_ID = "marking-definition--613f2e26-407d-48c7-9eca-b8e91df99dc9"
@@ -201,7 +201,8 @@ self.run_interval = int(
         )
         
         # Indicator based on file hash
-        indicator = stix2.Indicator(   
+        indicator = stix2.Indicator( 
+            id=Indicator.generate_id(pattern),
             name=f"Malicious package {osv_id}",
             description=summary,
             pattern=f"[file:hashes.'SHA-256' = '{sha256}']",
