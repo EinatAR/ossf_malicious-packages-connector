@@ -1,10 +1,17 @@
 connector:
-  id: "REPLACE-ME-WITH-UUID"
+  id: "ossf-malicious-connector"
   type: "EXTERNAL_IMPORT"
-  name: "OSSF Malicious Packages"
-  scope: "Indicator,Stix-Cyber-Observable"
+  name: "[C] OSSF Malicious Packages"
+  scope: "file,indicator"
   confidence_level: 80
   log_level: "info"
+  live_stream_id: null
+
+  # Force HTTP mode, do not listen to AMQP
+  listen: false          # do not start AMQP listener
+  listen_protocol: "API" # use HTTP to push bundles
+  listen_protocol_api_path: "/stream"
+  listen_protocol_api_port: 3000
 
 opencti:
   url: "https://your-opencti-url"
@@ -13,7 +20,7 @@ opencti:
 ossf:
   github_repo_url: "https://github.com/ossf/malicious-packages.git"
   branch: "main"
-  local_repo_path: "/opt/ossf-malicous-packages-repo"
-  run_interval_seconds: 86400        # run daily
+  local_repo_path: "/Users/einat.argon/opencti-connectors/ossf-malicious/repo"
+  run_interval_seconds: 3600
   default_score: 80
   source_name: "ossf/malicious-packages"
