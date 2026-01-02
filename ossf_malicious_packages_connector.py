@@ -10,7 +10,13 @@ import yaml
 import requests
 import stix2
 
-from pycti import OpenCTIConnectorHelper, get_config_variable, OpenCTIApiClient, Indicator, StixCoreRelationship,
+from pycti import (
+    OpenCTIConnectorHelper,
+    get_config_variable,
+    OpenCTIApiClient,
+    Indicator,
+    StixCoreRelationship,
+)
 
 # TLP:CLEAR marking definition (STIX ID)
 TLP_CLEAR_ID = "marking-definition--613f2e26-407d-48c7-9eca-b8e91df99dc9" 
@@ -301,29 +307,23 @@ class OSSFMaliciousPackagesConnector:
                 for i in range(0, total, CHUNK_SIZE):
                     chunk_index += 1
                     chunk = all_objects[i : i + CHUNK_SIZE]
-
-                    bundle_str = self.helper.stix2_create_bundle(chunk)
+                    bundle_str = self.helper.stix2_create_bundle(chunck)
 
                     self.helper.log_info(
-                        f"Sending bundle chunk {chunk_index} "
+                        f"[OSSF] Sending STIX2 bundle chunk {chunk_index} "
                         f"({len(chunk)} objects, items {i}-{i + len(chunk) - 1}) "
-                        f"to OpenCTI (STIX2)"
+                        f"to OpenCTI via worker queue"
                     )
 
-                    result = self.api_client.stix2.import_bundle_from_json(
-                        bundle_str,
-                        True,  # update=True
-                    )
-                    self.helper.log_info(
-                        f"Chunk {chunk_index} import result: {result}"
-                    )
+                    # Fire-and-forget: send bundle to the worker/stream
+                    self.helper.send_stix2_bundle(bundle_str)
 
             except Exception as e:
                 self.helper.log_error(f"Bundle import failed: {e}")
                 # Mark work as failed
                 self.helper.api.work.to_processed(
                     work_id,
-                    f"OSSF Malicious Packages run failed: {e}",
+                    f"OSSF Malicious Packages run failed while sending bundle: {e}",
                 )
                 return  # Don't update state if import failed
 
