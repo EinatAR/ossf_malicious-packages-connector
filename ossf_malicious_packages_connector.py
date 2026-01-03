@@ -316,7 +316,7 @@ class OSSFMaliciousPackagesConnector:
                     )
 
                     # Fire-and-forget: send bundle to the worker/stream
-                    self.helper.send_stix2_bundle(bundle_str)
+                    self.helper.send_stix2_bundle(bundle_str, work_id=work_id)
 
             except Exception as e:
                 self.helper.log_error(f"Bundle import failed: {e}")
