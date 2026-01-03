@@ -307,7 +307,7 @@ class OSSFMaliciousPackagesConnector:
                 for i in range(0, total, CHUNK_SIZE):
                     chunk_index += 1
                     chunk = all_objects[i : i + CHUNK_SIZE]
-                    bundle_str = self.helper.stix2_create_bundle(chunck)
+                    bundle_str = self.helper.stix2_create_bundle(chunk)
 
                     self.helper.log_info(
                         f"[OSSF] Sending STIX2 bundle chunk {chunk_index} "
