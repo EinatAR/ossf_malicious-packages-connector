@@ -1,26 +1,33 @@
+opencti:
+  url: "http://opencti:8080"        # or your OpenCTI URL (https://…)
+  token: "CHANGE_ME"               # OpenCTI API token
+  ssl_verify: false
+
 connector:
-  id: "ossf-malicious-connector"
+  id: "ossf-malicious-connector"   # any unique ID; can be UUID in production
   type: "EXTERNAL_IMPORT"
   name: "[C] OSSF Malicious Packages"
   scope: "file,indicator"
   confidence_level: 80
   log_level: "info"
   live_stream_id: null
-
-  # Force HTTP mode, do not listen to AMQP
-  listen: false          # do not start AMQP listener
-  listen_protocol: "API" # use HTTP to push bundles
+  listen: false                    # do not start AMQP listener
+  listen_protocol: "API"           # use HTTP to push bundles
   listen_protocol_api_path: "/stream"
   listen_protocol_api_port: 3000
-
-opencti:
-  url: "https://your-opencti-url"
-  token: "YOUR_OPENCTI_API_TOKEN"
 
 ossf:
   github_repo_url: "https://github.com/ossf/malicious-packages.git"
   branch: "main"
-  local_repo_path: "/Users/einat.argon/opencti-connectors/ossf-malicious/repo"
+  local_repo_path: "/data/ossf_malicious_repo"
   run_interval_seconds: 3600
   default_score: 80
   source_name: "ossf/malicious-packages"
+
+connection:
+  host: "rabbitmq"
+  port: 5672
+  vhost: "/"
+  user: "CHANGE_ME"
+  pass: "CHANGE_ME"
+  use_ssl: false
